@@ -6,9 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.IntRange;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
 import com.yalantis.ucrop.R;
@@ -22,6 +19,10 @@ import com.yalantis.ucrop.util.RectUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
+
+import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Created by Oleksii Shliama (https://github.com/shliama).
@@ -72,7 +73,6 @@ public class CropImageView extends TransformImageView {
                                  @Nullable BitmapCropCallback cropCallback) {
         cancelAllAnimations();
         setImageToWrapCropBounds(false);
-
         final ImageState imageState = new ImageState(
                 mCropRect, RectUtils.trapToRect(mCurrentImageCorners),
                 getCurrentScale(), getCurrentAngle());
@@ -241,7 +241,13 @@ public class CropImageView extends TransformImageView {
             super.postScale(deltaScale, px, py);
         }
     }
-
+    public void postScale(float deltaScale) {
+        if (deltaScale > 1 && getCurrentScale() * deltaScale <= getMaxScale()) {
+            super.postScale(deltaScale, mCropRect.centerX(), mCropRect.centerY());
+        } else if (deltaScale < 1 && getCurrentScale() * deltaScale >= getMinScale()) {
+            super.postScale(deltaScale, mCropRect.centerX(), mCropRect.centerY());
+        }
+    }
     /**
      * This method rotates image for given angle related to the image center.
      *
