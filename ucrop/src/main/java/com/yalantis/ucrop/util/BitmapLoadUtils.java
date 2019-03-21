@@ -26,7 +26,7 @@ import androidx.annotation.Nullable;
 /**
  * Created by Oleksii Shliama (https://github.com/shliama).
  */
-public class BitmapLoadUtils {
+public class  BitmapLoadUtils {
 
     private static final String TAG = "BitmapLoadUtils";
 

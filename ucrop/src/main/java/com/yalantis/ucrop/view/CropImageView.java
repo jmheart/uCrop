@@ -43,6 +43,7 @@ public class CropImageView extends TransformImageView {
     private final Matrix mTempMatrix = new Matrix();
 
     private float mTargetAspectRatio;
+    private float mInitTargetAspectRatio;
     private float mMaxScaleMultiplier = DEFAULT_MAX_SCALE_MULTIPLIER;
 
     private CropBoundsChangeListener mCropBoundsChangeListener;
@@ -105,7 +106,12 @@ public class CropImageView extends TransformImageView {
     public float getTargetAspectRatio() {
         return mTargetAspectRatio;
     }
-
+    public float getInitTargetAspectRatio(){
+        return mInitTargetAspectRatio;
+    }
+    public void setInitTargetAspectRatio( float mInitTargetAspectRatio){
+        this.mInitTargetAspectRatio=mInitTargetAspectRatio;
+    }
     /**
      * Updates current crop rectangle with given. Also recalculates image properties and position
      * to fit new crop rectangle.
@@ -381,6 +387,7 @@ public class CropImageView extends TransformImageView {
 
         if (mTargetAspectRatio == SOURCE_IMAGE_ASPECT_RATIO) {
             mTargetAspectRatio = drawableWidth / drawableHeight;
+            mInitTargetAspectRatio =mTargetAspectRatio;
         }
 
         int height = (int) (mThisWidth / mTargetAspectRatio);
@@ -510,8 +517,10 @@ public class CropImageView extends TransformImageView {
 
         if (targetAspectRatioX == SOURCE_IMAGE_ASPECT_RATIO || targetAspectRatioY == SOURCE_IMAGE_ASPECT_RATIO) {
             mTargetAspectRatio = SOURCE_IMAGE_ASPECT_RATIO;
+            mInitTargetAspectRatio = mTargetAspectRatio;
         } else {
             mTargetAspectRatio = targetAspectRatioX / targetAspectRatioY;
+            mInitTargetAspectRatio=mTargetAspectRatio;
         }
     }
 
@@ -627,7 +636,80 @@ public class CropImageView extends TransformImageView {
                 cropImageView.setImageToWrapCropBounds();
             }
         }
-
     }
+    /**
+     * 旋转后裁剪框保持一致
+     * @param angle
+     */
+    public void postRotateOrg(int angle){
+       if (angle != 0) {
+            mCurrentImageMatrix.postRotate(angle, mCropRect.centerX(), mCropRect.centerY());
+           // mCurrentImageMatrix.set(mCurrentImageMatrix);
+            //setImageMatrix(mCurrentImageMatrix);
+           postDelayed(new Runnable() {
+               @Override
+               public void run() {
+                   onImageLaidOutRotateOrg(getMatrixAngle(mCurrentImageMatrix));   //重新计算缩放比
+               }
+           },50);
 
+        }
+    }
+    protected void onImageLaidOutRotateOrg(float angle) {
+        super.onImageLaidOut();
+        final Drawable drawable = getDrawable();
+        if (drawable == null) {
+            return;
+        }
+        float drawableWidth= drawable.getIntrinsicWidth();
+        float drawableHeight= drawable.getIntrinsicHeight();
+        if (mTargetAspectRatio == SOURCE_IMAGE_ASPECT_RATIO) {
+            mTargetAspectRatio = drawableWidth / drawableHeight;
+        }
+        ////////////////处理逻辑
+        int height = (int) (mThisWidth / mTargetAspectRatio);
+        if (height > mThisHeight) {
+            int width = (int) (mThisHeight * mTargetAspectRatio);
+            int halfDiff = (mThisWidth - width) / 2;
+            if (Math.abs(angle)==90){
+                mCropRect.set(width + halfDiff , mThisHeight, halfDiff, 0);
+            }else{
+                mCropRect.set(halfDiff, 0, width + halfDiff, mThisHeight);
+            }
+        } else {
+            int halfDiff = (mThisHeight - height) / 2;
+            //mCropRect.set(0, halfDiff, mThisWidth, height + halfDiff);
+            if (Math.abs(angle)==90){
+                mCropRect.set(mThisWidth, height + halfDiff, 0, halfDiff);
+            }else{
+                mCropRect.set(0, halfDiff, mThisWidth, height + halfDiff);
+            }
+        }
+        calculateImageScaleBounds(drawableWidth, drawableHeight);
+        setNewUpInitialImagePosition(drawableWidth, drawableHeight,angle);
+        if (mCropBoundsChangeListener != null) {
+            mCropBoundsChangeListener.onCropAspectRatioChanged(mTargetAspectRatio);
+        }
+        if (mTransformImageListener != null) {
+            mTransformImageListener.onScale(getCurrentScale());
+            mTransformImageListener.onRotate(getCurrentAngle());
+        }
+    }
+    private void setNewUpInitialImagePosition(float drawableWidth, float drawableHeight,float angle) {
+        float cropRectWidth = mCropRect.width();
+        float cropRectHeight = mCropRect.height();
+
+        float widthScale = mCropRect.width() / drawableWidth;
+        float heightScale = mCropRect.height() / drawableHeight;
+
+        float initialMinScale = Math.max(widthScale, heightScale);
+
+        float tw = (cropRectWidth - drawableWidth * initialMinScale) / 2.0f + mCropRect.left;
+        float th = (cropRectHeight - drawableHeight * initialMinScale) / 2.0f + mCropRect.top;
+        mCurrentImageMatrix.reset();
+        mCurrentImageMatrix.postRotate(angle);
+        mCurrentImageMatrix.postScale(initialMinScale, initialMinScale);
+        mCurrentImageMatrix.postTranslate(tw, th);
+        setImageMatrix(mCurrentImageMatrix);
+    }
 }

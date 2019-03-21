@@ -133,14 +133,7 @@ public class SampleActivity extends BaseActivity implements UCropFragmentCallbac
         findViewById(R.id.button_random_image).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Random random = new Random();
-                int minSizePixels = 800;
-                int maxSizePixels = 2400;
-                Uri uri = Uri.parse(String.format(Locale.getDefault(), "https://unsplash.it/%d/%d/?random",
-                        minSizePixels + random.nextInt(maxSizePixels - minSizePixels),
-                        minSizePixels + random.nextInt(maxSizePixels - minSizePixels)));
-
-                startCrop(uri);
+                pickFromGallery();
             }
         });
         settingsView = findViewById(R.id.settings);
@@ -279,6 +272,7 @@ public class SampleActivity extends BaseActivity implements UCropFragmentCallbac
      * @return - ucrop builder instance
      */
     private UCrop basisConfig(@NonNull UCrop uCrop) {
+
         switch (mRadioGroupAspectRatio.getCheckedRadioButtonId()) {
             case R.id.radio_origin:
                 uCrop = uCrop.useSourceImageAspectRatio();
@@ -336,10 +330,13 @@ public class SampleActivity extends BaseActivity implements UCropFragmentCallbac
                 break;
         }
         options.setCompressionQuality(mSeekBarQuality.getProgress());
-
         options.setHideBottomControls(mCheckBoxHideBottomControls.isChecked());
         options.setFreeStyleCropEnabled(mCheckBoxFreeStyleCrop.isChecked());
-
+       options.setHideBottomControls(true);
+        options.setFreeStyleCropEnabled(true);
+        options.setShowCropFrame(true);
+        options.setShowCropGrid(false);//不显示方格子
+        uCrop.withOptions(options);
         /*
         If you want to configure how gestures work for all UCropActivity tabs
 

@@ -358,7 +358,7 @@ public class UCropActivity extends AppCompatActivity {
             mUCropView.animate().alpha(1).setDuration(300).setInterpolator(new AccelerateInterpolator());
             mBlockingView.setClickable(false);
             mShowLoader = false;
-            supportInvalidateOptionsMenu();
+           supportInvalidateOptionsMenu();
         }
 
         @Override
@@ -538,11 +538,16 @@ public class UCropActivity extends AppCompatActivity {
      * @param angle
      */
     private void rotateByAngle(int angle) {
-        mGestureCropImageView.postRotate(angle);
+        float mTargetAspectRatioValue= mGestureCropImageView.getInitTargetAspectRatio()*100;//获取长宽比
+        float mTargetAspectRatio=Math.abs(angle)==90?100/mTargetAspectRatioValue:mTargetAspectRatioValue/100;//得到旋转后的长宽比
+        mGestureCropImageView.setInitTargetAspectRatio(mTargetAspectRatio);
+        mOverlayView.setTargetAspectRatio(mTargetAspectRatio);
+        mGestureCropImageView.postRotateOrg(angle);
+       // mGestureCropImageView.setImageToWrapCropBounds(false);
        // RectF rectF = new RectF();
-      //  mGestureCropImageView.getImageMatrix().mapRect(rectF);
+       // mGestureCropImageView.getImageMatrix().mapRect(rectF);
        // mOverlayView.setCropBounds(6,385,1074,1186);
-        mGestureCropImageView.setImageToWrapCropBounds(false);
+       // mGestureCropImageView.setCropRect(mOverlayView.getCropViewRect());
 
 
     }
