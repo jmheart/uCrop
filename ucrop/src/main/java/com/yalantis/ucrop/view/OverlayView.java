@@ -8,10 +8,6 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Region;
 import android.os.Build;
-import android.support.annotation.ColorInt;
-import android.support.annotation.IntDef;
-import android.support.annotation.IntRange;
-import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,6 +18,11 @@ import com.yalantis.ucrop.util.RectUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.IntDef;
+import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
 
 /**
  * Created by Oleksii Shliama (https://github.com/shliama).
@@ -226,7 +227,10 @@ public class OverlayView extends View {
             mShouldSetupCropBounds = true;
         }
     }
-
+    public void setCropBounds(float left, float top, float right, float bottom){
+        mCropViewRect.set(left,top,right,bottom);
+        postInvalidate();
+    }
     /**
      * This method setups crop bounds rectangles for given aspect ratio and view size.
      * {@link #mCropViewRect} is used to draw crop bounds - uses padding.
@@ -303,7 +307,6 @@ public class OverlayView extends View {
 
         float x = event.getX();
         float y = event.getY();
-
         if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_DOWN) {
             mCurrentTouchCornerIndex = getCurrentTouchIndex(x, y);
             boolean shouldHandle = mCurrentTouchCornerIndex != -1;
@@ -418,8 +421,9 @@ public class OverlayView extends View {
             }
         }
 
-        if (mFreestyleCropMode == FREESTYLE_CROP_MODE_ENABLE && closestPointIndex < 0 && mCropViewRect.contains(touchX, touchY)) {
-            return 4;
+        //显示方格子才拦截方格子里面的拖动手势
+        if (mShowCropGrid&&mFreestyleCropMode == FREESTYLE_CROP_MODE_ENABLE && closestPointIndex < 0 && mCropViewRect.contains(touchX, touchY)) {
+             return 4;
         }
 
 //        for (int i = 0; i <= 8; i += 2) {
@@ -470,9 +474,7 @@ public class OverlayView extends View {
     protected void drawCropGrid(@NonNull Canvas canvas) {
         if (mShowCropGrid) {
             if (mGridPoints == null && !mCropViewRect.isEmpty()) {
-
                 mGridPoints = new float[(mCropGridRowCount) * 4 + (mCropGridColumnCount) * 4];
-
                 int index = 0;
                 for (int i = 0; i < mCropGridRowCount; i++) {
                     mGridPoints[index++] = mCropViewRect.left;
@@ -493,11 +495,9 @@ public class OverlayView extends View {
                 canvas.drawLines(mGridPoints, mCropGridPaint);
             }
         }
-
         if (mShowCropFrame) {
             canvas.drawRect(mCropViewRect, mCropFramePaint);
         }
-
         if (mFreestyleCropMode != FREESTYLE_CROP_MODE_DISABLE) {
             canvas.save();
 
@@ -547,8 +547,8 @@ public class OverlayView extends View {
         mCropFramePaint.setStrokeWidth(cropFrameStrokeSize);
         mCropFramePaint.setColor(cropFrameColor);
         mCropFramePaint.setStyle(Paint.Style.STROKE);
-
-        mCropFrameCornersPaint.setStrokeWidth(cropFrameStrokeSize * 3);
+        // TODO: 2019/3/14 控制线条粗细
+        mCropFrameCornersPaint.setStrokeWidth(cropFrameStrokeSize * 6);
         mCropFrameCornersPaint.setColor(cropFrameColor);
         mCropFrameCornersPaint.setStyle(Paint.Style.STROKE);
     }

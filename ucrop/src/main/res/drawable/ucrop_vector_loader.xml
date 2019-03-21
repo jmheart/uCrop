@@ -15,8 +15,8 @@
             android:name="circlePath"
             android:pathData="M96,5.56405C145.946,5.56405 186.436,46.0536 186.436,96C186.436,145.946 145.946,186.436 96,186.436C46.0536,186.436 5.56405,145.946 5.56405,96C5.56405,46.0536 46.0536,5.56405 96,5.56405Z"
             android:strokeAlpha="1"
-            android:strokeColor="@color/ucrop_color_toolbar_widget"
-            android:strokeWidth="13"
+            android:strokeColor="@color/ucrop_color_widget_background"
+            android:strokeWidth="4"
             android:trimPathEnd="0.7"/>
 
     </group>
