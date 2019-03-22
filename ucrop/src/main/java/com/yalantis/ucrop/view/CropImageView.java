@@ -7,6 +7,7 @@ import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import com.yalantis.ucrop.R;
 import com.yalantis.ucrop.callback.BitmapCropCallback;
@@ -53,7 +54,8 @@ public class CropImageView extends TransformImageView {
     private float mMaxScale, mMinScale;
     private int mMaxResultImageSizeX = 0, mMaxResultImageSizeY = 0;
     private long mImageToWrapCropBoundsAnimDuration = DEFAULT_IMAGE_TO_CROP_BOUNDS_ANIM_DURATION;
-
+    int [] rotateFinalArray=new int[]{90,180,270,360};
+    int rotateFinalPostion=0;
     public CropImageView(Context context) {
         this(context, null);
     }
@@ -639,24 +641,12 @@ public class CropImageView extends TransformImageView {
     }
     /**
      * 旋转后裁剪框保持一致
-     * @param angle
      */
-    public void postRotateOrg(int angle){
-       if (angle != 0) {
-            mCurrentImageMatrix.postRotate(angle, mCropRect.centerX(), mCropRect.centerY());
-           // mCurrentImageMatrix.set(mCurrentImageMatrix);
-            //setImageMatrix(mCurrentImageMatrix);
-           postDelayed(new Runnable() {
-               @Override
-               public void run() {
-                   onImageLaidOutRotateOrg(getMatrixAngle(mCurrentImageMatrix));   //重新计算缩放比
-               }
-           },50);
-
-        }
+    public void onImageLaidOutRotateOrg(){
+        onImageLaidOutRotateOrg(getMatrixAngle(mCurrentImageMatrix));   //重新计算缩放比
     }
     protected void onImageLaidOutRotateOrg(float angle) {
-        super.onImageLaidOut();
+       // super.onImageLaidOut();
         final Drawable drawable = getDrawable();
         if (drawable == null) {
             return;
@@ -707,9 +697,14 @@ public class CropImageView extends TransformImageView {
         float tw = (cropRectWidth - drawableWidth * initialMinScale) / 2.0f + mCropRect.left;
         float th = (cropRectHeight - drawableHeight * initialMinScale) / 2.0f + mCropRect.top;
         mCurrentImageMatrix.reset();
-        mCurrentImageMatrix.postRotate(angle);
+        if (rotateFinalPostion==rotateFinalArray.length){
+            rotateFinalPostion=0;
+        }
+        mCurrentImageMatrix.postRotate(rotateFinalArray[rotateFinalPostion]);
+        rotateFinalPostion++;
         mCurrentImageMatrix.postScale(initialMinScale, initialMinScale);
         mCurrentImageMatrix.postTranslate(tw, th);
         setImageMatrix(mCurrentImageMatrix);
     }
+
 }
