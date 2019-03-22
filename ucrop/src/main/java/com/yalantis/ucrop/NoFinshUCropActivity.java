@@ -106,7 +106,7 @@ public abstract class NoFinshUCropActivity extends AppCompatActivity {
     private int mCompressQuality = DEFAULT_COMPRESS_QUALITY;
     private int[] mAllowedGestures = new int[]{SCALE, ROTATE, ALL};
     RelativeLayout pb_loading_layout;
-    abstract void onBitmapCroppedResult(@NonNull Uri resultUri, int offsetX, int offsetY, int imageWidth, int imageHeight);
+    public abstract void onBitmapCroppedResult(@NonNull Uri resultUri, int offsetX, int offsetY, int imageWidth, int imageHeight);
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
