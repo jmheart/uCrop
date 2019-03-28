@@ -334,7 +334,6 @@ public class UCropActivity extends AppCompatActivity {
         mUCropView = findViewById(R.id.ucrop);
         mGestureCropImageView = mUCropView.getCropImageView();
         mOverlayView = mUCropView.getOverlayView();
-
         mGestureCropImageView.setTransformImageListener(mImageListener);
 
         ((ImageView) findViewById(R.id.image_view_logo)).setColorFilter(mLogoColor, PorterDuff.Mode.SRC_ATOP);
@@ -544,12 +543,7 @@ public class UCropActivity extends AppCompatActivity {
         float mTargetAspectRatio=100/mTargetAspectRatioValue;//得到旋转后的长宽比
         mGestureCropImageView.setInitTargetAspectRatio(mTargetAspectRatio);
         mOverlayView.setTargetAspectRatio(mTargetAspectRatio);
-        mOverlayView.post(new Runnable() {
-            @Override
-            public void run() {
-                mGestureCropImageView.onImageLaidOutRotateOrg();
-            }
-        });
+        mGestureCropImageView.onImageLaidOutRotateOrg();
        // mGestureCropImageView.setImageToWrapCropBounds(false);
        // RectF rectF = new RectF();
        // mGestureCropImageView.getImageMatrix().mapRect(rectF);

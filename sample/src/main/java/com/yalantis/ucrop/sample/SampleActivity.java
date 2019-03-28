@@ -2,6 +2,7 @@ package com.yalantis.ucrop.sample;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -14,6 +15,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,6 +45,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 /**
  * Created by Oleksii Shliama (https://github.com/shliama).
@@ -85,6 +90,21 @@ public class SampleActivity extends BaseActivity implements UCropFragmentCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample);
         setupUI();
+
+    }
+    public void startToFragment(Context context, int container, Fragment newFragment) {
+
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(container, newFragment);
+        transaction.addToBackStack(context.getClass().getName());
+        transaction.commit();
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     @Override
@@ -127,6 +147,7 @@ public class SampleActivity extends BaseActivity implements UCropFragmentCallbac
         findViewById(R.id.button_crop).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // startToFragment(SampleActivity.this,R.id.framelayout,new TestFragment());
                 pickFromGallery();
             }
         });
@@ -181,8 +202,6 @@ public class SampleActivity extends BaseActivity implements UCropFragmentCallbac
         mEditTextMaxHeight.addTextChangedListener(mMaxSizeTextWatcher);
         mEditTextMaxWidth.addTextChangedListener(mMaxSizeTextWatcher);
     }
-
-
     private TextWatcher mAspectRatioTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {

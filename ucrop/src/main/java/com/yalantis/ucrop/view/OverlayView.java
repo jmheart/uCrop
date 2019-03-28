@@ -227,6 +227,7 @@ public class OverlayView extends View {
             mShouldSetupCropBounds = true;
         }
     }
+
     public void setCropBounds(float left, float top, float right, float bottom){
         mCropViewRect.set(left,top,right,bottom);
         postInvalidate();

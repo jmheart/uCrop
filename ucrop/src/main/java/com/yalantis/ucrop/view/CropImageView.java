@@ -113,6 +113,7 @@ public class CropImageView extends TransformImageView {
     }
     public void setInitTargetAspectRatio( float mInitTargetAspectRatio){
         this.mInitTargetAspectRatio=mInitTargetAspectRatio;
+
     }
     /**
      * Updates current crop rectangle with given. Also recalculates image properties and position
@@ -273,8 +274,9 @@ public class CropImageView extends TransformImageView {
         removeCallbacks(mZoomImageToPositionRunnable);
     }
 
+    // TODO: 2019/3/28 去掉放大缩小的移动动画
     public void setImageToWrapCropBounds() {
-        setImageToWrapCropBounds(true);
+        setImageToWrapCropBounds(false);
     }
 
     /**
@@ -678,24 +680,22 @@ public class CropImageView extends TransformImageView {
         calculateImageScaleBounds(drawableWidth, drawableHeight);
         setNewUpInitialImagePosition(drawableWidth, drawableHeight,angle);
         if (mCropBoundsChangeListener != null) {
-            mCropBoundsChangeListener.onCropAspectRatioChanged(mTargetAspectRatio);
+           mCropBoundsChangeListener.onCropAspectRatioChanged(mTargetAspectRatio);
         }
         if (mTransformImageListener != null) {
-            mTransformImageListener.onScale(getCurrentScale());
-            mTransformImageListener.onRotate(getCurrentAngle());
+         // mTransformImageListener.onScale(getCurrentScale());
+         // mTransformImageListener.onRotate(getCurrentAngle());
         }
     }
     private void setNewUpInitialImagePosition(float drawableWidth, float drawableHeight,float angle) {
-        float cropRectWidth = mCropRect.width();
-        float cropRectHeight = mCropRect.height();
+      float cropRectWidth = mCropRect.width();
+      float cropRectHeight = mCropRect.height();
 
-        float widthScale = mCropRect.width() / drawableWidth;
-        float heightScale = mCropRect.height() / drawableHeight;
-
-        float initialMinScale = Math.max(widthScale, heightScale);
-
-        float tw = (cropRectWidth - drawableWidth * initialMinScale) / 2.0f + mCropRect.left;
-        float th = (cropRectHeight - drawableHeight * initialMinScale) / 2.0f + mCropRect.top;
+      float widthScale = mCropRect.width() / drawableWidth;
+      float heightScale = mCropRect.height() / drawableHeight;
+      float initialMinScale = Math.max(widthScale, heightScale);
+       float tw = (cropRectWidth - drawableWidth * initialMinScale) / 2.0f + mCropRect.left;
+       float th = (cropRectHeight - drawableHeight * initialMinScale) / 2.0f + mCropRect.top;
         mCurrentImageMatrix.reset();
         if (rotateFinalPostion==rotateFinalArray.length){
             rotateFinalPostion=0;

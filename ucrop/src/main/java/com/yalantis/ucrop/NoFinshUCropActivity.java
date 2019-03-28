@@ -540,12 +540,7 @@ public abstract class NoFinshUCropActivity extends AppCompatActivity {
         float mTargetAspectRatio=100/mTargetAspectRatioValue;//得到旋转后的长宽比
         mGestureCropImageView.setInitTargetAspectRatio(mTargetAspectRatio);
         mOverlayView.setTargetAspectRatio(mTargetAspectRatio);
-        mOverlayView.post(new Runnable() {
-            @Override
-            public void run() {
-                mGestureCropImageView.onImageLaidOutRotateOrg();
-            }
-        });
+        mGestureCropImageView.onImageLaidOutRotateOrg();
        // mGestureCropImageView.setImageToWrapCropBounds(false);
        // RectF rectF = new RectF();
        // mGestureCropImageView.getImageMatrix().mapRect(rectF);
