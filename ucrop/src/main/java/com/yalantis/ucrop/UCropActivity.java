@@ -619,18 +619,21 @@ public class UCropActivity extends AppCompatActivity {
     /**
      * 开始裁剪图片
      */
+    public static long startTime;
     protected void cropAndSaveImage() {
-        pb_loading_layout.setVisibility(View.VISIBLE);
+
+      //  pb_loading_layout.setVisibility(View.VISIBLE);
         mBlockingView.setClickable(true);
         mShowLoader = true;
         supportInvalidateOptionsMenu();
+        startTime=System.currentTimeMillis();
         mGestureCropImageView.cropAndSaveImage(mCompressFormat, mCompressQuality, new BitmapCropCallback() {
-
             @Override
             public void onBitmapCropped(@NonNull Uri resultUri, int offsetX, int offsetY, int imageWidth, int imageHeight) {
-                if (pb_loading_layout!=null){
+                Log.d(TAG, "onBitmapCropped:裁剪时间=="+(System.currentTimeMillis()-startTime));
+             /*   if (pb_loading_layout!=null){
                     pb_loading_layout.setVisibility(View.GONE);
-                }
+                }*/
                 mBlockingView.setClickable(false);
                 mShowLoader = false;
                setResultUri(resultUri, mGestureCropImageView.getTargetAspectRatio(), offsetX, offsetY, imageWidth, imageHeight);
@@ -639,9 +642,9 @@ public class UCropActivity extends AppCompatActivity {
 
             @Override
             public void onCropFailure(@NonNull Throwable t) {
-                if (pb_loading_layout!=null){
+               /* if (pb_loading_layout!=null){
                     pb_loading_layout.setVisibility(View.GONE);
-                }
+                }*/
                 setResultError(t);
                 finish();
             }

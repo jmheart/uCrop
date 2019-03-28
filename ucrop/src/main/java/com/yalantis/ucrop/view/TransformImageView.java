@@ -16,9 +16,13 @@ import com.yalantis.ucrop.util.BitmapLoadUtils;
 import com.yalantis.ucrop.util.FastBitmapDrawable;
 import com.yalantis.ucrop.util.RectUtils;
 
+import java.io.File;
+import java.io.IOException;
+
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import id.zelory.compressor.Compressor;
 
 /**
  * Created by Oleksii Shliama (https://github.com/shliama).
@@ -143,7 +147,12 @@ public class TransformImageView extends ImageView {
 
                     @Override
                     public void onBitmapLoaded(@NonNull Bitmap bitmap, @NonNull ExifInfo exifInfo, @NonNull String imageInputPath, @Nullable String imageOutputPath) {
-                        mImageInputPath = imageInputPath;
+                        try {
+                            mImageInputPath =new Compressor(getContext()).compressToFile(new File(imageInputPath)).getAbsolutePath() ;
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            mImageInputPath=imageInputPath;
+                        }
                         mImageOutputPath = imageOutputPath;
                         mExifInfo = exifInfo;
 

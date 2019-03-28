@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -617,7 +618,8 @@ public abstract class NoFinshUCropActivity extends AppCompatActivity {
      * 开始裁剪图片
      */
     protected void cropAndSaveImage() {
-        pb_loading_layout.setVisibility(View.VISIBLE);
+
+       // pb_loading_layout.setVisibility(View.VISIBLE);
         mBlockingView.setClickable(true);
         mShowLoader = true;
         //supportInvalidateOptionsMenu();
@@ -625,9 +627,9 @@ public abstract class NoFinshUCropActivity extends AppCompatActivity {
 
             @Override
             public void onBitmapCropped(@NonNull Uri resultUri, int offsetX, int offsetY, int imageWidth, int imageHeight) {
-                if (pb_loading_layout!=null){
+                /*if (pb_loading_layout!=null){
                     pb_loading_layout.setVisibility(View.GONE);
-                }
+                }*/
                 mBlockingView.setClickable(false);
                 mShowLoader = false;
                 onBitmapCroppedResult(resultUri,offsetX,offsetY,imageWidth,imageHeight);
@@ -637,9 +639,9 @@ public abstract class NoFinshUCropActivity extends AppCompatActivity {
 
             @Override
             public void onCropFailure(@NonNull Throwable t) {
-                if (pb_loading_layout!=null){
+             /*   if (pb_loading_layout!=null){
                     pb_loading_layout.setVisibility(View.GONE);
-                }
+                }*/
                 setResultError(t);
                 finish();
             }

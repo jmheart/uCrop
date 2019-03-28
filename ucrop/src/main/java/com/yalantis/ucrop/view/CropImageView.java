@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 
 import com.yalantis.ucrop.R;
+import com.yalantis.ucrop.UCropActivity;
 import com.yalantis.ucrop.callback.BitmapCropCallback;
 import com.yalantis.ucrop.callback.CropBoundsChangeListener;
 import com.yalantis.ucrop.model.CropParameters;
@@ -84,7 +85,7 @@ public class CropImageView extends TransformImageView {
                 mMaxResultImageSizeX, mMaxResultImageSizeY,
                 compressFormat, compressQuality,
                 getImageInputPath(), getImageOutputPath(), getExifInfo());
-
+        Log.d("tt", "onBitmapCropped:裁剪时间222=="+(System.currentTimeMillis()- UCropActivity.startTime));
         new BitmapCropTask(getViewBitmap(), imageState, cropParameters, cropCallback).execute();
     }
 

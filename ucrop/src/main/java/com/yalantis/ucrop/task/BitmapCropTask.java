@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.yalantis.ucrop.UCropActivity;
 import com.yalantis.ucrop.callback.BitmapCropCallback;
 import com.yalantis.ucrop.model.CropParameters;
 import com.yalantis.ucrop.model.ExifInfo;
@@ -89,6 +90,7 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
         float resizeScale = resize();
 
         try {
+
             crop(resizeScale);
             mViewBitmap = null;
         } catch (Throwable throwable) {
@@ -144,6 +146,7 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
                     cropOffsetX, cropOffsetY, mCroppedImageWidth, mCroppedImageHeight,
                     mCurrentAngle, resizeScale, mCompressFormat.ordinal(), mCompressQuality,
                     mExifInfo.getExifDegrees(), mExifInfo.getExifTranslation());
+            Log.d("tt", "onBitmapCropped:裁剪时间333=="+(System.currentTimeMillis()- UCropActivity.startTime));
             if (cropped && mCompressFormat.equals(Bitmap.CompressFormat.JPEG)) {
                 ImageHeaderParser.copyExif(originalExif, mCroppedImageWidth, mCroppedImageHeight, mImageOutputPath);
             }
