@@ -85,7 +85,6 @@ public class CropImageView extends TransformImageView {
                 mMaxResultImageSizeX, mMaxResultImageSizeY,
                 compressFormat, compressQuality,
                 getImageInputPath(), getImageOutputPath(), getExifInfo());
-        Log.d("tt", "onBitmapCropped:裁剪时间222=="+(System.currentTimeMillis()- UCropActivity.startTime));
         new BitmapCropTask(getViewBitmap(), imageState, cropParameters, cropCallback).execute();
     }
 

@@ -626,11 +626,9 @@ public class UCropActivity extends AppCompatActivity {
         mBlockingView.setClickable(true);
         mShowLoader = true;
         supportInvalidateOptionsMenu();
-        startTime=System.currentTimeMillis();
         mGestureCropImageView.cropAndSaveImage(mCompressFormat, mCompressQuality, new BitmapCropCallback() {
             @Override
             public void onBitmapCropped(@NonNull Uri resultUri, int offsetX, int offsetY, int imageWidth, int imageHeight) {
-                Log.d(TAG, "onBitmapCropped:裁剪时间=="+(System.currentTimeMillis()-startTime));
              /*   if (pb_loading_layout!=null){
                     pb_loading_layout.setVisibility(View.GONE);
                 }*/
