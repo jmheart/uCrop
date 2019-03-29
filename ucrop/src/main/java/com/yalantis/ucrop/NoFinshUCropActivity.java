@@ -622,7 +622,7 @@ public abstract class NoFinshUCropActivity extends AppCompatActivity {
        // pb_loading_layout.setVisibility(View.VISIBLE);
         mBlockingView.setClickable(true);
         mShowLoader = true;
-        //supportInvalidateOptionsMenu();
+        supportInvalidateOptionsMenu();
         mGestureCropImageView.cropAndSaveImage(mCompressFormat, mCompressQuality, new BitmapCropCallback() {
 
             @Override
