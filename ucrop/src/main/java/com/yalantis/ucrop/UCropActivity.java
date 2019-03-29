@@ -634,6 +634,7 @@ public class UCropActivity extends AppCompatActivity {
                 }*/
                 mBlockingView.setClickable(false);
                 mShowLoader = false;
+                supportInvalidateOptionsMenu();
                setResultUri(resultUri, mGestureCropImageView.getTargetAspectRatio(), offsetX, offsetY, imageWidth, imageHeight);
                finish();
             }

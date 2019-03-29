@@ -632,6 +632,7 @@ public abstract class NoFinshUCropActivity extends AppCompatActivity {
                 }*/
                 mBlockingView.setClickable(false);
                 mShowLoader = false;
+                supportInvalidateOptionsMenu();
                 onBitmapCroppedResult(resultUri,offsetX,offsetY,imageWidth,imageHeight);
              //   setResultUri(resultUri, mGestureCropImageView.getTargetAspectRatio(), offsetX, offsetY, imageWidth, imageHeight);
              //   finish();
