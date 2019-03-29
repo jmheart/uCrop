@@ -151,8 +151,8 @@ public class TransformImageView extends ImageView {
                             mImageInputPath =new Compressor(getContext()).compressToFile(new File(imageInputPath)).getAbsolutePath() ;
                         } catch (IOException e) {
                             e.printStackTrace();
-                            mImageInputPath=imageInputPath;
                         }
+                        mImageInputPath=imageInputPath;
                         mImageOutputPath = imageOutputPath;
                         mExifInfo = exifInfo;
 

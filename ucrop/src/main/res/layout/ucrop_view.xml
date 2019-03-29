@@ -13,7 +13,6 @@
 
     <com.yalantis.ucrop.view.OverlayView
         android:id="@+id/view_overlay"
-        android:padding="2dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
       />

@@ -74,7 +74,6 @@ public class ResultActivity extends BaseActivity {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(new File(getIntent().getData().getPath()).getAbsolutePath(), options);
-
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

@@ -2,7 +2,9 @@ package com.yalantis.ucrop.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
+import android.graphics.EmbossMaskFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
@@ -42,9 +44,14 @@ public class OverlayView extends View {
     public static final int DEFAULT_FREESTYLE_CROP_MODE = FREESTYLE_CROP_MODE_DISABLE;
     public static final int DEFAULT_CROP_GRID_ROW_COUNT = 2;
     public static final int DEFAULT_CROP_GRID_COLUMN_COUNT = 2;
+    //      mCropViewRect.set(mCropViewRect.left+6,mCropViewRect.top+6,mCropViewRect.right-6,mCropViewRect.bottom-6); 画笔粗细
+    // TODO: 2019/3/29 画笔粗细
+    public static final int CROP_FRAME_STROKE_SIZE = 6;
+
 
     private final RectF mCropViewRect = new RectF();
     private final RectF mTempRect = new RectF();
+    private final RectF mStrokeRect = new RectF();
 
     protected int mThisWidth, mThisHeight;
     protected float[] mCropGridCorners;
@@ -237,6 +244,7 @@ public class OverlayView extends View {
      * {@link #mCropViewRect} is used to draw crop bounds - uses padding.
      */
     public void setupCropBounds() {
+        //mCropViewRect.set(mCropViewRect.left+6,mCropViewRect.top+6,mCropViewRect.right-6,mCropViewRect.bottom-6); 画笔粗细
         int height = (int) (mThisWidth / mTargetAspectRatio);
         if (height > mThisHeight) {
             int width = (int) (mThisHeight * mTargetAspectRatio);
@@ -388,8 +396,8 @@ public class OverlayView extends View {
 
         boolean changeHeight = mTempRect.height() >= mCropRectMinSize;
         boolean changeWidth = mTempRect.width() >= mCropRectMinSize;
-        mCropViewRect.set(
-                changeWidth ? mTempRect.left : mCropViewRect.left,
+
+        mCropViewRect.set( changeWidth ? mTempRect.left : mCropViewRect.left,
                 changeHeight ? mTempRect.top : mCropViewRect.top,
                 changeWidth ? mTempRect.right : mCropViewRect.right,
                 changeHeight ? mTempRect.bottom : mCropViewRect.bottom);
@@ -473,6 +481,7 @@ public class OverlayView extends View {
      * @param canvas - valid canvas object
      */
     protected void drawCropGrid(@NonNull Canvas canvas) {
+        //是否显示方格
         if (mShowCropGrid) {
             if (mGridPoints == null && !mCropViewRect.isEmpty()) {
                 mGridPoints = new float[(mCropGridRowCount) * 4 + (mCropGridColumnCount) * 4];
@@ -496,12 +505,13 @@ public class OverlayView extends View {
                 canvas.drawLines(mGridPoints, mCropGridPaint);
             }
         }
+        //是否显示裁剪边框
         if (mShowCropFrame) {
             canvas.drawRect(mCropViewRect, mCropFramePaint);
         }
+        //四个角逻辑
         if (mFreestyleCropMode != FREESTYLE_CROP_MODE_DISABLE) {
             canvas.save();
-
             mTempRect.set(mCropViewRect);
             mTempRect.inset(mCropRectCornerTouchAreaLineLength, -mCropRectCornerTouchAreaLineLength);
             canvas.clipRect(mTempRect, Region.Op.DIFFERENCE);
@@ -509,9 +519,9 @@ public class OverlayView extends View {
             mTempRect.set(mCropViewRect);
             mTempRect.inset(-mCropRectCornerTouchAreaLineLength, mCropRectCornerTouchAreaLineLength);
             canvas.clipRect(mTempRect, Region.Op.DIFFERENCE);
-
-            canvas.drawRect(mCropViewRect, mCropFrameCornersPaint);
-
+            //计算偏移量
+            mStrokeRect.set(mCropViewRect.left+CROP_FRAME_STROKE_SIZE,mCropViewRect.top+CROP_FRAME_STROKE_SIZE+2,mCropViewRect.right-CROP_FRAME_STROKE_SIZE,mCropViewRect.bottom-CROP_FRAME_STROKE_SIZE-2);
+            canvas.drawRect(mStrokeRect, mCropFrameCornersPaint);
             canvas.restore();
         }
     }
@@ -549,9 +559,21 @@ public class OverlayView extends View {
         mCropFramePaint.setColor(cropFrameColor);
         mCropFramePaint.setStyle(Paint.Style.STROKE);
         // TODO: 2019/3/14 控制线条粗细
-        mCropFrameCornersPaint.setStrokeWidth(cropFrameStrokeSize * 6);
+        mCropFrameCornersPaint.setStrokeWidth(cropFrameStrokeSize * CROP_FRAME_STROKE_SIZE);
         mCropFrameCornersPaint.setColor(cropFrameColor);
         mCropFrameCornersPaint.setStyle(Paint.Style.STROKE);
+        /**
+         *
+         * @param direction  指定光源的位置，长度为xxx的数组标量[x,y,z]
+         * @param ambient    环境光的因子 （0~1），越接近0，环境光越暗
+         * @param specular   镜面反射系数 越接近0，镜面反射越强
+         * @param blurRadius 模糊半径 值越大，模糊效果越明显
+         */
+       mCropFrameCornersPaint.setMaskFilter(new EmbossMaskFilter(new float[]{5,5,5},0.3f,1,800));
+      //  mCropFrameCornersPaint.setShadowLayer(2,6, 6,R.color.ucrop_color_default_crop_frame);
+        //  mCropFrameCornersPaint.setMaskFilter(new BlurMaskFilter(80, BlurMaskFilter.Blur.INNER));
+        // 需禁用硬件加速
+        setLayerType(LAYER_TYPE_SOFTWARE, null);
     }
 
     /**
