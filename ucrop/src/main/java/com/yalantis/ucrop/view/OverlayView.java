@@ -52,6 +52,7 @@ public class OverlayView extends View {
     private final RectF mCropViewRect = new RectF();
     private final RectF mTempRect = new RectF();
     private final RectF mStrokeRect = new RectF();
+    private final RectF mStrokeFrameRect = new RectF();
 
     protected int mThisWidth, mThisHeight;
     protected float[] mCropGridCorners;
@@ -68,6 +69,7 @@ public class OverlayView extends View {
     private Paint mCropGridPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mCropFramePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mCropFrameCornersPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private Paint mCropFrameShadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     @FreestyleMode
     private int mFreestyleCropMode = DEFAULT_FREESTYLE_CROP_MODE;
     private float mPreviousTouchX = -1, mPreviousTouchY = -1;
@@ -522,6 +524,9 @@ public class OverlayView extends View {
             //计算偏移量
             mStrokeRect.set(mCropViewRect.left+CROP_FRAME_STROKE_SIZE,mCropViewRect.top+CROP_FRAME_STROKE_SIZE+2,mCropViewRect.right-CROP_FRAME_STROKE_SIZE,mCropViewRect.bottom-CROP_FRAME_STROKE_SIZE-2);
             canvas.drawRect(mStrokeRect, mCropFrameCornersPaint);
+            //新增
+           mStrokeFrameRect.set(mStrokeRect.left+CROP_FRAME_STROKE_SIZE,mStrokeRect.top+CROP_FRAME_STROKE_SIZE,mStrokeRect.right-CROP_FRAME_STROKE_SIZE,mStrokeRect.bottom-CROP_FRAME_STROKE_SIZE);
+           canvas.drawRect(mStrokeFrameRect, mCropFrameShadowPaint);
             canvas.restore();
         }
     }
@@ -560,8 +565,12 @@ public class OverlayView extends View {
         mCropFramePaint.setStyle(Paint.Style.STROKE);
         // TODO: 2019/3/14 控制线条粗细
         mCropFrameCornersPaint.setStrokeWidth(cropFrameStrokeSize * CROP_FRAME_STROKE_SIZE);
-        mCropFrameCornersPaint.setColor(cropFrameColor);
+        mCropFrameCornersPaint.setColor( getResources().getColor(R.color.ucrop_color_default_crop_frame));
         mCropFrameCornersPaint.setStyle(Paint.Style.STROKE);
+        // TODO: 2019/4/1 阴影
+        mCropFrameShadowPaint.setColor(0x80ffffff);
+        mCropFrameShadowPaint.setStyle(Paint.Style.STROKE);
+        mCropFrameShadowPaint.setStrokeWidth(cropFrameStrokeSize * (CROP_FRAME_STROKE_SIZE-2));
         /**
          *
          * @param direction  指定光源的位置，长度为xxx的数组标量[x,y,z]
@@ -569,11 +578,11 @@ public class OverlayView extends View {
          * @param specular   镜面反射系数 越接近0，镜面反射越强
          * @param blurRadius 模糊半径 值越大，模糊效果越明显
          */
-     //  mCropFrameCornersPaint.setMaskFilter(new EmbossMaskFilter(new float[]{5,5,5},0.3f,1,800));
+      //  mCropFrameCornersPaint.setMaskFilter(new EmbossMaskFilter(new float[]{5,5,5},0.3f,1,800));
       //  mCropFrameCornersPaint.setShadowLayer(2,6, 6,R.color.ucrop_color_default_crop_frame);
         //  mCropFrameCornersPaint.setMaskFilter(new BlurMaskFilter(80, BlurMaskFilter.Blur.INNER));
         // 需禁用硬件加速
-     //   setLayerType(LAYER_TYPE_SOFTWARE, mCropFrameCornersPaint);
+      //   setLayerType(LAYER_TYPE_SOFTWARE, mCropFrameCornersPaint);
     }
 
     /**
