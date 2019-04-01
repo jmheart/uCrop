@@ -535,7 +535,7 @@ public abstract class NoFinshUCropActivity extends AppCompatActivity {
      * 旋转照片
      * @param angle
      */
-    private void rotateByAngle(int angle) {
+    protected void rotateByAngle(int angle) {
         mGestureCropImageView.postRotate(angle);
         float mTargetAspectRatioValue= mGestureCropImageView.getInitTargetAspectRatio()*100;//获取长宽比
         float mTargetAspectRatio=100/mTargetAspectRatioValue;//得到旋转后的长宽比

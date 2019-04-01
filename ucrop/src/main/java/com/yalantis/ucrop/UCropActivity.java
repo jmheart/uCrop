@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.yalantis.ucrop.callback.BitmapCropCallback;
 import com.yalantis.ucrop.model.AspectRatio;
@@ -536,7 +537,7 @@ public class UCropActivity extends AppCompatActivity {
      * 旋转照片
      * @param angle
      */
-    private void rotateByAngle(int angle) {
+    protected void rotateByAngle(int angle) {
 
         mGestureCropImageView.postRotate(angle);
         float mTargetAspectRatioValue= mGestureCropImageView.getInitTargetAspectRatio()*100;//获取长宽比
@@ -635,8 +636,8 @@ public class UCropActivity extends AppCompatActivity {
                 mBlockingView.setClickable(false);
                 mShowLoader = false;
                 supportInvalidateOptionsMenu();
-               setResultUri(resultUri, mGestureCropImageView.getTargetAspectRatio(), offsetX, offsetY, imageWidth, imageHeight);
-               finish();
+                setResultUri(resultUri, mGestureCropImageView.getTargetAspectRatio(), offsetX, offsetY, imageWidth, imageHeight);
+                finish();
             }
 
             @Override

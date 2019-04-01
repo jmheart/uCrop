@@ -569,11 +569,11 @@ public class OverlayView extends View {
          * @param specular   镜面反射系数 越接近0，镜面反射越强
          * @param blurRadius 模糊半径 值越大，模糊效果越明显
          */
-       mCropFrameCornersPaint.setMaskFilter(new EmbossMaskFilter(new float[]{5,5,5},0.3f,1,800));
+     //  mCropFrameCornersPaint.setMaskFilter(new EmbossMaskFilter(new float[]{5,5,5},0.3f,1,800));
       //  mCropFrameCornersPaint.setShadowLayer(2,6, 6,R.color.ucrop_color_default_crop_frame);
         //  mCropFrameCornersPaint.setMaskFilter(new BlurMaskFilter(80, BlurMaskFilter.Blur.INNER));
         // 需禁用硬件加速
-        setLayerType(LAYER_TYPE_SOFTWARE, null);
+     //   setLayerType(LAYER_TYPE_SOFTWARE, mCropFrameCornersPaint);
     }
 
     /**
