@@ -154,7 +154,8 @@ public class SampleActivity extends BaseActivity implements UCropFragmentCallbac
         findViewById(R.id.button_random_image).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pickFromGallery();
+                gote();
+                //  pickFromGallery();
             }
         });
         settingsView = findViewById(R.id.settings);
@@ -201,6 +202,16 @@ public class SampleActivity extends BaseActivity implements UCropFragmentCallbac
 
         mEditTextMaxHeight.addTextChangedListener(mMaxSizeTextWatcher);
         mEditTextMaxWidth.addTextChangedListener(mMaxSizeTextWatcher);
+    }
+    public void gote(){
+        try {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse("market://search?q="+getPackageName()));
+            startActivity(i);
+        } catch (Exception e) {
+            Toast.makeText(this, "您的手机没有安装Android应用市场", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
     }
     private TextWatcher mAspectRatioTextWatcher = new TextWatcher() {
         @Override
